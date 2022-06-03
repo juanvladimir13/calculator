@@ -1,0 +1,203 @@
+Diseñar una calculadora para realizar las operaciones básicas de una calculadora
+(suma, resta,multiplicación y división) utilizando patrones de diseño. Ademas que
+permita guardar las operaciones que se van ejecutando para volver hacia atrás o ir
+hacia adelante
+
+	class Calculadora
+	- num1
+	- num2
+	- operadorAritmetico
+	- resultado
+
+	ejecutarOpericionAritmetica() {
+		
+	}
+	
+	realizarSuma() {}
+	realizarResta() {}
+	realizarMultiplizacion() {}
+	realizarDivicion() {}
+	
+	
+Strategy
+-------------------------------------------------------------------------------
+	
+	class Operacion {
+		int num1;
+		int num2;
+		int resultado;
+		char signo;
+	}
+	
+	class Calculadora {	
+		Operacion operacion;
+		
+		// Strategy	
+		Strategy strategy;
+		Context context;
+		
+		// Memento
+		Originator originator;
+		Caretaker caretaker;
+		
+		Calculadora(){
+			context = new Context()
+			
+			originator = new Originator();
+			caretaker = new Caretaker();
+			operacion = new Operacion();
+		}
+		
+		setSuma(){
+			strategy = new Suma();
+			operacion.setSigno('+');
+		}
+		
+		setResta(){
+			strategy = new Resta();
+			operacion.setSigno('-');
+		}
+		
+		setMultiplicacion(){
+			strategy = new Multiplicacion();
+			operacion.setSigno('*');
+		}
+		
+		setDivision(){
+			strategy = new Division();
+			operacion.setSigno('/');
+		}
+		
+		procesarDatos(){
+			// num1 y num2 son capturados por teclado mediante la IU
+			operacion.setData(num1, num2);
+					
+			context.setStategy(strategy);
+			double resultado = context.realizarOperacion(num1, num2);
+			
+			operacion.setResultado(resultado);
+
+			originator.setOperacion(operacion);
+			Memento memento = originator.createMemento();
+			caretaker.add(memento);
+		}
+		
+		atras(){
+			Memento memento = caretaker.atras();
+			originator.setMemento(memento);
+			this.operacion = originator.getOperacion();
+		}
+		
+		adelante(){
+			Memento memento = caretaker.adelante();
+			originator.setMemento(memento);
+			this.operacion = originator.getOperacion();
+		}
+	}
+
+	class Context {
+		Strategy strategy
+		
+		setStategy(Strategy strategy){
+			this.strategy = strategy
+		}
+
+		int realizarOperacion(num1, num2){
+			return strategy.operacionAritmetica(num1, num2);
+		}
+	}
+
+	interface Strategy {
+		int operacionAritmetica( num1, num2)	
+	}
+	
+	class Suma implements Strategy {
+		int operacionAritmetica( num1, num2) {
+			return num1 + num2
+		}
+	}
+	
+	class Resta implements Strategy {
+		int operacionAritmetica( num1, num2) {
+			return num1 - num2
+		}
+	}
+	
+	class Multiplicacion implements Strategy {
+		int operacionAritmetica( num1, num2) {
+			return num1 * num2
+		}
+	}
+	
+	class Division implements Strategy {
+		int operacionAritmetica( num1, num2) {
+			return num1 / num2
+		}
+	}
+
+
+
+Memento
+-----------------------------------------------------------------------------
+	
+	class Memento {
+		int num1;
+		int num2;
+		char signo;
+		int resultado;
+	}
+	
+	class Originator {
+		Operacion operacion;
+		
+		setOperacion(Operacion operacion){
+			this.operacion = operacion;
+		}
+		
+		Operacion getOperacion(){
+			return operacion;
+		}
+		
+		setMemento(Memento memento){
+			operacion.setNum1(memento.getNum1());
+			operacion.setNum2(memento.getNum2());
+			operacion.setSigno(memento.getSigno());
+			operacion.setResultado(memento.getResultado());			
+		}
+		
+		Memento createMemento(){
+			Memento memento = new Memento();
+			
+			memento.setNum1(operacion.getNum1());
+			memento.setNum2(operacion.getNum2());
+			memento.setSigno(operacion.getNumSigno());
+			memento.setResultado(operacion.getResultado());
+			
+			return memento;
+		}
+	
+	}
+	
+	class Caretaker(){
+		List<Memento> estados;
+		
+		Caretaker(){
+			estados = new List();
+		}
+		
+		add(Memento memento){
+			estados.add(memento);
+		}
+		
+		Memento get(int index){
+			estados.get(index);
+		}
+		
+		Memento atras(){
+			// navegacion
+		}
+		
+		Memento adelante(){
+			// navegacion
+		}
+	}

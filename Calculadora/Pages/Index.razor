@@ -1,0 +1,78 @@
+﻿@page "/"
+
+<PageTitle>Calculadora</PageTitle>
+
+
+<div class="container mt-5">
+  <h2>Calculadora</h2>
+
+  <div class="row mt-3">
+    <div class="col-3">
+      <div class="row">
+        <div class="col-4">
+          <input type="number" @bind-value="calculator.operacion.Num1" class="form-control">
+        </div>
+        <div class="col-2 d-flex" style="justify-content: center;">
+          <h2>@calculator.operacion.Signo</h2>
+        </div>
+        <div class="col-4">
+          <input type="number" @bind-value="calculator.operacion.Num2" class="form-control">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-10">
+          <input type="text" @bind="calculator.operacion.Resultado" class="form-control text-center" disabled>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-10 d-flex" style="justify-content: space-between;">
+          <button @onclick="calculator.SetSuma" type="button" class="btn btn-outline-dark">+</button>
+          <button @onclick="calculator.SetResta" type="button" class="btn btn-outline-dark">-</button>
+          <button @onclick="calculator.SetMultiplicacion" type="button" class="btn btn-outline-dark">*</button>
+          <button @onclick="calculator.SetDivision" type="button" class="btn btn-outline-dark">/</button>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-10 d-flex" style="flex-direction: column;">
+          <button class="btn btn-primary" @onclick="calculator.ProcesarDatos">=</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-outline-dark" @onclick="calculator.Atras">Previus</button>
+          <button class="btn btn-outline-dark" @onclick="calculator.Adelante">Next</button>
+          <input type="number" @bind="calculator.Index" style="width: 100px;">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Operaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var item in calculator.GetHistory())
+              {
+                <tr>
+                  <td>@item</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  private Calculator calculator = new Calculator();
+}
